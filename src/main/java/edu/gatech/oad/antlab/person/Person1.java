@@ -3,8 +3,8 @@ package edu.gatech.oad.antlab.person;
 /**
  *  A simple class for person 1
  *  returns their name and a
- *  modified string 
- *  
+ *  modified string
+ *
  *  @author Bob
  *  @version 1.1
  */
@@ -31,15 +31,24 @@ public class Person1 {
 	 */
 	private String calc(String input) {
 	  //Person 1 put your implementation here
-	  return null;
+    if (input == null || input.length() <= 2) {
+        return input;
+    } else if (input.length() == 3) {
+        String temp = input.substring(0, 2);
+        String temp2 = input.substring(2, 3);
+    	  return temp2 + temp;
+    }
+    String temp = input.substring(0, (input.length() - 2));
+    String temp2 = input.substring((input.length() - 2), input.length());
+	  return temp2 + temp;
 	}
-	
+
 	/**
 	 * Return a string rep of this object
 	 * that varies with an input string
 	 *
 	 * @param input the varying string
-	 * @return the string representing the 
+	 * @return the string representing the
 	 *         object
 	 */
 	public String toString(String input) {
