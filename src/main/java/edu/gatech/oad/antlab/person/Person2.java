@@ -30,8 +30,24 @@ public class Person2 {
 	 * @return the modified string
 	 */
 	private String calc(String input) {
-	  //Person 2 put your implementation here
-	  return null;
+		if (input == null) {
+			return null;
+		}
+		Random random = new Random();
+		boolean[] check = new boolean[input.length()];
+		for (int i = 0; i < check.length; i++) {
+			check[i] = false;
+		}
+		String output = "";
+		for (int i = 0; i < check.length; i++) {
+			int j = random.nextInt(input.length());
+			while (check[j]) {
+				j = random.nextInt(input.length());
+			}
+			check[j] = true;
+			output += input.charAt(j);
+		}
+		return output;
 	}
 	/**
 	 * Return a string rep of this object
