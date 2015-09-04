@@ -13,6 +13,9 @@ repositories {
 jar {
     baseName = 'willjar'
     version =  '0.1.0'
+    manifest {
+        attributes 'Main-class' : 'edu.gatech.oad.antlab.pkg1.AntLabMain'
+    }
 }
 // end::jar[]
 
@@ -22,6 +25,7 @@ targetCompatibility = 1.8
 
 dependencies {
     compile "joda-time:joda-time:2.2"
+    compile files('lib/resources.jar')
 }
 // end::dependencies[]
 
