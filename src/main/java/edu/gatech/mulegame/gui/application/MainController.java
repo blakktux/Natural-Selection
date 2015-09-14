@@ -6,10 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 
@@ -67,6 +64,9 @@ public class MainController implements Initializable {
     private Button spheroidButton; // Value injected by FXMLLoader
 
     @FXML
+    private Slider playerCount;
+
+    @FXML
     private Label currentPlayer;
 
     @FXML
@@ -78,6 +78,38 @@ public class MainController implements Initializable {
     @FXML
     private GridPane playerConfig;
 
+
+    int[] settings;
+
+    @FXML
+    private void openPane2(ActionEvent e) {
+        settings[0] = (int) playerCount.getValue();
+        startPane.setVisible(false);
+        diffPane.setVisible(true);
+    }
+    @FXML
+    private void openPane3(ActionEvent e) {
+        if (e.getSource().toString().equals("Button[id=easyMode, styleClass=button]'Easy'")) {
+            settings[1] = 1;
+        }
+        if (e.getSource().toString().equals("Button[id=mediumMode, styleClass=button]'Medium'")) {
+            settings[1] = 2;
+        }
+        if (e.getSource().toString().equals("Button[id=hardMode, styleClass=button]'Hard'")) {
+            settings[1] = 3;
+        }
+        diffPane.setVisible(false);
+        tilePane.setVisible(true);
+    }
+
+    @FXML
+    private void openPane4(ActionEvent e) {
+        System.out.println(e.getSource().toString());
+    }
+    @FXML
+    private void playerDone(ActionEvent e) {
+
+    }
 
     public void initialize(URL location, ResourceBundle resources) {
         assert startButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
@@ -99,6 +131,13 @@ public class MainController implements Initializable {
         assert diffPane != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
         assert tilePane != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
         assert playerConfig != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
+
+        startPane.setVisible(true);
+        diffPane.setVisible(false);
+        tilePane.setVisible(false);
+        playerConfig.setVisible(false);
+
+        settings = new int[10];
 
 
 
