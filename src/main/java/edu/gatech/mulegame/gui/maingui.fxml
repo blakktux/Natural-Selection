@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<?import java.util.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <children>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-image: url('http://thedoteaters.com/tde/wp-content/uploads/2013/03/ea-MULE-1024x768.png');">
+      <GridPane fx:id="startPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-image: url('http://thedoteaters.com/tde/wp-content/uploads/2013/03/ea-MULE-1024x768.png');">
          <children>
-            <Button mnemonicParsing="false" onMouseClicked="#start" prefHeight="105.0" prefWidth="210.0" text="Start!" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="startButton" mnemonicParsing="false" prefHeight="105.0" prefWidth="210.0" text="Start!" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Slider blockIncrement="1.0" majorTickUnit="1.0" max="4.0" min="1.0" minHeight="-Infinity" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
          </children>
          <columnConstraints>
@@ -24,7 +25,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <GridPane prefHeight="768.0" prefWidth="1024.0" visible="false">
+      <GridPane fx:id="diffPane" prefHeight="768.0" prefWidth="1024.0" visible="false">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -36,12 +37,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="Easy" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="Hard" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="Medium" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="easyMode" mnemonicParsing="false" text="Easy" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <Button fx:id="hardMode" mnemonicParsing="false" text="Hard" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+            <Button fx:id="mediumMode" mnemonicParsing="false" text="Medium" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <GridPane prefHeight="768.0" prefWidth="1024.0" visible="false">
+      <GridPane fx:id="tilePane" prefHeight="768.0" prefWidth="1024.0" visible="false">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -55,12 +56,12 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" prefHeight="275.0" prefWidth="242.0" text="Mountain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" prefHeight="256.0" prefWidth="238.0" text="River" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" prefHeight="269.0" prefWidth="205.0" text="Flatland" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="mountainButton" mnemonicParsing="false" prefHeight="275.0" prefWidth="242.0" text="Mountain" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="riverButton" mnemonicParsing="false" prefHeight="256.0" prefWidth="238.0" text="River" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="flatlandButton" mnemonicParsing="false" prefHeight="269.0" prefWidth="205.0" text="Flatland" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <GridPane prefHeight="778.0" prefWidth="1030.0" visible="false">
+      <GridPane fx:id="playerConfig" prefHeight="778.0" prefWidth="1030.0" visible="false">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -74,16 +75,16 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="FLAPPER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-            <Button mnemonicParsing="false" text="LEGGITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-            <Button mnemonicParsing="false" text="HUMANOID" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-            <Button mnemonicParsing="false" text="MECHTRON" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Button mnemonicParsing="false" text="GOLLUMER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Button mnemonicParsing="false" text="PACKER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Button mnemonicParsing="false" text="BONZOID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" text="SPHEROID" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="flapperButton" mnemonicParsing="false" text="FLAPPER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Button fx:id="leggiteButton" mnemonicParsing="false" text="LEGGITE" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Button fx:id="humanoidButton" mnemonicParsing="false" text="HUMANOID" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Button fx:id="mechtronButton" mnemonicParsing="false" text="MECHTRON" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Button fx:id="gollumerButton" mnemonicParsing="false" text="GOLLUMER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Button fx:id="packerButton" mnemonicParsing="false" text="PACKER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Button fx:id="bonzoidButton" mnemonicParsing="false" text="BONZOID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="spheroidButton" mnemonicParsing="false" text="SPHEROID" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="113.0" prefWidth="688.0" text="PLAYER N" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647">
+            <Label fx:id="currentPlayer" alignment="CENTER" contentDisplay="CENTER" prefHeight="113.0" prefWidth="688.0" text="PLAYER N" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647">
                <font>
                   <Font name="System Bold" size="78.0" />
                </font>
