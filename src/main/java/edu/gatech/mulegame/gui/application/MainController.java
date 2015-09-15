@@ -79,6 +79,8 @@ public class MainController implements Initializable {
     private GridPane playerConfig;
     @FXML
     private TextField currentPlayerName;
+    @FXML
+    private Label dialog;
 
 
     int[] settings;
@@ -124,53 +126,61 @@ public class MainController implements Initializable {
     }
     @FXML
     private void playerDone(ActionEvent e) {
-        if (count < 5) {
+        if (count < 4 + 1) {
             if (e.getSource().toString().equals("Button[id=mechtronButton, styleClass=button]'MECHTRON'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 0;
+                dialog.setText("Player " + (count - 1) + "chose MECHTRON!\n Player"  + count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
             if (e.getSource().toString().equals("Button[id=gollumerButton, styleClass=button]'GOLLUMER'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 1;
+                dialog.setText("Player " + (count - 1) + "chose GOLLUMER!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
             if (e.getSource().toString().equals("Button[id=packerButton, styleClass=button]'PACKER'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 2;
+                dialog.setText("Player " + (count - 1) + "chose PACKER!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
-            if (e.getSource().toString().equals("Button[id=BonzoidButton, styleClass=button]'BONZOID'")) {
+            if (e.getSource().toString().equals("Button[id=bonzoidButton, styleClass=button]'BONZOID'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 3;
+                dialog.setText("Player " + (count - 1) + "chose BONZOID!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
-            if (e.getSource().toString().equals("Button[id=riverButton, styleClass=button]'River'")) {
+            if (e.getSource().toString().equals("Button[id=spheroidButton, styleClass=button]'SPHEROID'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 4;
+                dialog.setText("Player " + (count - 1) + "chose SPHEROID!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
-            if (e.getSource().toString().equals("Button[id=mountainButton, styleClass=button]'Mountain'")) {
+            if (e.getSource().toString().equals("Button[id=flapperButton, styleClass=button]'FLAPPER'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 5;
+                dialog.setText("Player " + (count - 1) + "chose FLAPPER!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
-            if (e.getSource().toString().equals("Button[id=flatlandButton, styleClass=button]'Flatland'")) {
+            if (e.getSource().toString().equals("Button[id=leggiteButton, styleClass=button]'LEGGITE'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 6;
+                dialog.setText("Player " + (count - 1) + "chose LEGGITE!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
-            if (e.getSource().toString().equals("Button[id=riverButton, styleClass=button]'River'")) {
+            if (e.getSource().toString().equals("Button[id=humanoidButton, styleClass=button]'HUMANOID'")) {
                 String someNameHolder = currentPlayerName.getText();
                 currentPlayerName.clear();
                 int raceSettingHolder = 7;
+                dialog.setText("Player " + (count - 1) + "chose HUMANOID!\n Player"+ count + " is choosing now!");
                 currentPlayer.setText("Player" + count++);
             }
         } else {
