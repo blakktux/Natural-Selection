@@ -77,9 +77,14 @@ public class MainController implements Initializable {
     private GridPane tilePane;
     @FXML
     private GridPane playerConfig;
+    @FXML
+    private TextField currentPlayerName;
 
 
     int[] settings;
+    int[] playerRace;
+    String[] playerName;
+    int count = 1;
 
     @FXML
     private void openPane2(ActionEvent e) {
@@ -104,10 +109,76 @@ public class MainController implements Initializable {
 
     @FXML
     private void openPane4(ActionEvent e) {
-        System.out.println(e.getSource().toString());
+        if (e.getSource().toString().equals("Button[id=flatlandButton, styleClass=button]'Flatland'")) {
+            settings[2] = 1;
+        }
+        if (e.getSource().toString().equals("Button[id=riverButton, styleClass=button]'River'")) {
+            settings[2] = 2;
+        }
+        if (e.getSource().toString().equals("Button[id=mountainButton, styleClass=button]'Mountain'")) {
+            settings[2] = 3;
+        }
+        tilePane.setVisible(false);
+        playerConfig.setVisible(true);
+        currentPlayer.setText("Player" + count++);
     }
     @FXML
     private void playerDone(ActionEvent e) {
+        if (count < 5) {
+            if (e.getSource().toString().equals("Button[id=mechtronButton, styleClass=button]'MECHTRON'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 0;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=gollumerButton, styleClass=button]'GOLLUMER'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 1;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=packerButton, styleClass=button]'PACKER'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 2;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=BonzoidButton, styleClass=button]'BONZOID'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 3;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=riverButton, styleClass=button]'River'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 4;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=mountainButton, styleClass=button]'Mountain'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 5;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=flatlandButton, styleClass=button]'Flatland'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 6;
+                currentPlayer.setText("Player" + count++);
+            }
+            if (e.getSource().toString().equals("Button[id=riverButton, styleClass=button]'River'")) {
+                String someNameHolder = currentPlayerName.getText();
+                currentPlayerName.clear();
+                int raceSettingHolder = 7;
+                currentPlayer.setText("Player" + count++);
+            }
+        } else {
+
+            playerConfig.setVisible(false);
+            startPane.setVisible(true);
+            count = 1;
+        }
 
     }
 

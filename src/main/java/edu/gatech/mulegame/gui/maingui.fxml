@@ -82,7 +82,7 @@
             <Button fx:id="packerButton" mnemonicParsing="false" onAction="#playerDone" text="PACKER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
             <Button fx:id="bonzoidButton" mnemonicParsing="false" onAction="#playerDone" text="BONZOID" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Button fx:id="spheroidButton" mnemonicParsing="false" onAction="#playerDone" text="SPHEROID" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="currentPlayerName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label fx:id="currentPlayer" alignment="CENTER" contentDisplay="CENTER" prefHeight="113.0" prefWidth="688.0" text="PLAYER N" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647">
                <font>
                   <Font name="System Bold" size="78.0" />
