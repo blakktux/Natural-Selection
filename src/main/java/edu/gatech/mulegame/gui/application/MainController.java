@@ -282,6 +282,9 @@ public class MainController implements Initializable {
     }
 
     public void townOptionEvent(int i) {
+        if (i == 2) {
+            playerMoney[turn] += 100;//add money relative to turn timer and end turn
+        }
         if (i == 3) {
             mapPane.setVisible(true);
             townPane.setVisible(false);
@@ -320,7 +323,12 @@ public class MainController implements Initializable {
         townPane.setVisible(false);
         for (int i = 0; i < 4; i++) {
             playerMoney[i] = 1000;
-            townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
+            if (i != 2) {
+                townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
+            }
+            if (i == 2) {
+                townOptionButton[i] = new Button("Gamble");
+            }
             final int k = i;
             townOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
