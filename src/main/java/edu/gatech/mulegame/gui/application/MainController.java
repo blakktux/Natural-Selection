@@ -283,7 +283,14 @@ public class MainController implements Initializable {
 
     public void townOptionEvent(int i) {
         if (i == 2) {
-            playerMoney[turn] += 100;//add money relative to turn timer and end turn
+            playerMoney[turn] += 100; //add money relative to timer remaining
+            turn++;
+            if (turn >= numOfPlayer) {
+                turn = turn % numOfPlayer;
+                round++;
+            }
+            mapPane.setVisible(true);
+            townPane.setVisible(false);
         }
         if (i == 3) {
             mapPane.setVisible(true);
