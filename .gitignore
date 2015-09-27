@@ -1,0 +1,12 @@
+# Build and Release Folders
+bin/
+bin-debug/
+bin-release/
+build/
+
+#gradle stuff
+gradle.bat
+gradle
+.gradle/
+
+*.class
