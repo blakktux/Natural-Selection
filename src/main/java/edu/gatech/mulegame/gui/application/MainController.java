@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 
 public class MainController implements Initializable {
@@ -81,16 +82,35 @@ public class MainController implements Initializable {
     private TextField currentPlayerName;
     @FXML
     private Label dialog;
+    @FXML
+    private ColorPicker colorPicker;
+    @FXML
+    private GridPane mapPane;
+    @FXML
+    private GridPane townPane;
+    @FXML
+    private Label mapPaneDialog;
 
 
-    int[] settings;
-    int[] playerRace;
-    String[] playerName;
-    int count = 1;
+    int[] settings = new int[3];
+    int[] playerRace = new int[4];
+    String[] playerName = new String[4];
+    int count = 0;
+    int numOfPlayer;
+    Color[] playerColor = new Color[4];
+    Button[][] buttons = new Button[4][4];
+    int turn = 0;
+    int round = 0;
+    Label[] playerInfoDisplay = new Label[4];
+    int numOfPasses = 0;
+    int[] playerMoney = new int[4];
+    Button passButton = new Button();
+    Button enterTownButton = new Button();
+    Button[] townOptionButton = new Button[4];
 
     @FXML
     private void openPane2(ActionEvent e) {
-        settings[0] = (int) playerCount.getValue();
+        numOfPlayer = (int) playerCount.getValue();
         startPane.setVisible(false);
         diffPane.setVisible(true);
     }
@@ -122,106 +142,236 @@ public class MainController implements Initializable {
         }
         tilePane.setVisible(false);
         playerConfig.setVisible(true);
-        currentPlayer.setText("Player" + count++);
+        currentPlayer.setText("Player 1");
     }
     @FXML
     private void playerDone(ActionEvent e) {
-        if (count < 4 + 1) {
-            if (e.getSource().toString().equals("Button[id=mechtronButton, styleClass=button]'MECHTRON'")) {
-                String someNameHolder = currentPlayerName.getText();
+        if (!currentPlayerName.getText().equals("ddd")) {
+            if (count < numOfPlayer) {
+                count++;
+                currentPlayer.setText("Player" + count);
+                playerName[count - 1] = currentPlayerName.getText();
+                playerColor[count - 1] = colorPicker.getValue();
                 currentPlayerName.clear();
-                int raceSettingHolder = 0;
-                dialog.setText("Player " + (count - 1) + "chose MECHTRON!\n Player"  + count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=gollumerButton, styleClass=button]'GOLLUMER'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 1;
-                dialog.setText("Player " + (count - 1) + "chose GOLLUMER!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=packerButton, styleClass=button]'PACKER'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 2;
-                dialog.setText("Player " + (count - 1) + "chose PACKER!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=bonzoidButton, styleClass=button]'BONZOID'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 3;
-                dialog.setText("Player " + (count - 1) + "chose BONZOID!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=spheroidButton, styleClass=button]'SPHEROID'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 4;
-                dialog.setText("Player " + (count - 1) + "chose SPHEROID!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=flapperButton, styleClass=button]'FLAPPER'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 5;
-                dialog.setText("Player " + (count - 1) + "chose FLAPPER!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=leggiteButton, styleClass=button]'LEGGITE'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 6;
-                dialog.setText("Player " + (count - 1) + "chose LEGGITE!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
-            }
-            if (e.getSource().toString().equals("Button[id=humanoidButton, styleClass=button]'HUMANOID'")) {
-                String someNameHolder = currentPlayerName.getText();
-                currentPlayerName.clear();
-                int raceSettingHolder = 7;
-                dialog.setText("Player " + (count - 1) + "chose HUMANOID!\n Player"+ count + " is choosing now!");
-                currentPlayer.setText("Player" + count++);
+                if (e.getSource().toString().equals("Button[id=mechtronButton, styleClass=button]'MECHTRON'")) {
+                    playerRace[count - 1] = 0;
+                    dialog.setText("Player " + count + "chose MECHTRON!\n Player"  + count + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=gollumerButton, styleClass=button]'GOLLUMER'")) {
+                    playerRace[count - 1] = 1;
+                    dialog.setText("Player " + count + "chose GOLLUMER!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=packerButton, styleClass=button]'PACKER'")) {
+                    playerRace[count - 1] = 2;
+                    dialog.setText("Player " + count + "chose PACKER!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=bonzoidButton, styleClass=button]'BONZOID'")) {
+                    playerRace[count - 1] = 3;
+                    dialog.setText("Player " + count + "chose BONZOID!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=spheroidButton, styleClass=button]'SPHEROID'")) {
+                    playerRace[count - 1] = 4;
+                    dialog.setText("Player " + count + "chose SPHEROID!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=flapperButton, styleClass=button]'FLAPPER'")) {
+                    playerRace[count - 1] = 5;
+                    dialog.setText("Player " + count + "chose FLAPPER!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=leggiteButton, styleClass=button]'LEGGITE'")) {
+                    playerRace[count - 1] = 6;
+                    dialog.setText("Player " + count + "chose LEGGITE!\n Player" + (count + 1) + " is choosing now!");
+                }
+                if (e.getSource().toString().equals("Button[id=humanoidButton, styleClass=button]'HUMANOID'")) {
+                    playerRace[count - 1] = 7;
+                    dialog.setText("Player " + count + "chose HUMANOID!\n Player" + (count + 1) + " is choosing now!");
+                }
+                String s = "Map Tile";
+                if (settings[2] == 1) {
+                    s = "Flattile";
+                } else if (settings[2] == 2) {
+                    s = "River";
+                } else if (settings[2] == 3) {
+                    s = "Mountain";
+                }
+                if (count >= numOfPlayer) {
+                    playerConfig.setVisible(false);
+                    mapPane.setVisible(true);
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            buttons[i][j] = new Button(s);
+                            buttons[i][j].setMaxHeight(10000);
+                            buttons[i][j].setMaxWidth(10000);
+                            mapPane.add(buttons[i][j], i, j);
+                            final int k = i;
+                            final int l = j;
+                            buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
+                                public void handle (ActionEvent e) {
+                                    changeTileColor(k, l);
+                                }
+                            });
+                        }
+                    }
+                    for (int i = 0; i < numOfPlayer; i++) {
+                        playerInfoDisplay[i] = new Label();
+                        playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, playerMoney[i]));
+                        playerInfoDisplay[i].setMaxWidth(10000);
+                        playerInfoDisplay[i].setMaxHeight(10);
+                        mapPane.add(playerInfoDisplay[i], 5, i);
+                    }
+                }
+            } else {
+
+                playerConfig.setVisible(false);
+                mapPane.setVisible(true);
+                for (int i = 0; i < numOfPlayer; i++) {
+                    System.out.print(playerColor[i]);
+                }
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        buttons[i][j] = new Button("Map Tile");
+                        buttons[i][j].setMaxHeight(10000);
+                        buttons[i][j].setMaxWidth(10000);
+                        mapPane.add(buttons[i][j], i, j);
+                        final int k = i;
+                        final int l = j;
+                        buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
+                            public void handle (ActionEvent e) {
+                                changeTileColor(k, l);
+                            }
+                        });
+                    }
+                    playerInfoDisplay[i] = new Label();
+                    playerInfoDisplay[i].setMaxWidth(10000);
+                    playerInfoDisplay[i].setMaxHeight(10000);
+                    mapPane.add(playerInfoDisplay[i], 5, i);
+                }
+
             }
         } else {
-
-            playerConfig.setVisible(false);
-            startPane.setVisible(true);
-            count = 1;
+            dialog.setText("Invalid name");
         }
+    }
 
+    public void changeTileColor(int i, int j) {
+        if (round < 2) {
+            if (buttons[i][j].getStyle().equals("")) {
+                buttons[i][j].setStyle(String.format("-fx-base: #%h", playerColor[turn]));
+                playerInfoDisplay[turn].setText(String.format("player %d has %d dollars", turn + 1 , playerMoney[turn]));
+                turn++;
+                if (turn >= numOfPlayer) {
+                    turn = turn % numOfPlayer;
+                    round++;
+                }
+
+            }
+        } else {
+            if (buttons[i][j].getStyle().equals("") && playerMoney[turn] >= 500) {
+                numOfPasses = 0;
+                mapPaneDialog.setText("");
+                playerMoney[turn] -= 500;
+                buttons[i][j].setStyle(String.format("-fx-base: #%h", playerColor[turn]));
+                playerInfoDisplay[turn].setText(String.format("player %d has %d dollars", turn + 1 , playerMoney[turn]));
+                turn++;
+                if (turn >= numOfPlayer) {
+                    turn = turn % numOfPlayer;
+                }
+            } else {
+                mapPaneDialog.setText("player doesn't have enough money or it's already bought");
+            }
+        }
+    }
+
+    public void townOptionEvent(int i) {
+        if (i == 2) {
+            playerMoney[turn] += 100; //add money relative to timer remaining
+            turn++;
+            if (turn >= numOfPlayer) {
+                turn = turn % numOfPlayer;
+                round++;
+            }
+            mapPane.setVisible(true);
+            townPane.setVisible(false);
+        }
+        if (i == 3) {
+            mapPane.setVisible(true);
+            townPane.setVisible(false);
+        }
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        assert startButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert easyMode != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert hardMode != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert mediumMode != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert riverButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert flatlandButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert flapperButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert leggiteButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert humanoidButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert mechtronButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert gollumerButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert packerButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert bonzoidButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert spheroidButton != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert currentPlayer != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert startPane != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert diffPane != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert tilePane != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
-        assert playerConfig != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
+
+        assert startButton != null : "fx identification failed.";
+        assert easyMode != null : "fx identification failed.";
+        assert hardMode != null : "fx identification failed.";
+        assert mediumMode != null : "fx identification failed.";
+        assert riverButton != null : "fx identification failed.";
+        assert flatlandButton != null : "fx identification failed.";
+        assert flapperButton != null : "fx identification failed.";
+        assert leggiteButton != null : "fx identification failed.";
+        assert humanoidButton != null : "fx identification failed.";
+        assert mechtronButton != null : "fx identification failed.";
+        assert gollumerButton != null : "fx identification failed.";
+        assert packerButton != null : "fx identification failed.";
+        assert bonzoidButton != null : "fx identification failed.";
+        assert spheroidButton != null : "fx identification failed.";
+        assert currentPlayer != null : "fx identification failed.";
+        assert startPane != null : "fx identification failed.";
+        assert diffPane != null : "fx identification failed.";
+        assert tilePane != null : "fx identification failed.";
+        assert playerConfig != null : "fx identification failed.";
+        assert mapPane != null : "fx identification failed.";
+        assert colorPicker != null : "fx identification failed.";
 
         startPane.setVisible(true);
         diffPane.setVisible(false);
         tilePane.setVisible(false);
         playerConfig.setVisible(false);
+        mapPane.setVisible(false);
+        townPane.setVisible(false);
+        for (int i = 0; i < 4; i++) {
+            playerMoney[i] = 1000;
+            if (i != 2) {
+                townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
+            }
+            if (i == 2) {
+                townOptionButton[i] = new Button("Gamble");
+            }
+            final int k = i;
+            townOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    townOptionEvent(k);
+                }
+            });
+            townPane.add(townOptionButton[i], i%2, i/2);
+        }
 
-        settings = new int[10];
 
 
 
+
+        passButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                mapPaneDialog.setText("");
+                if (round == 2) {
+                    numOfPasses++;
+                    if (numOfPasses >= numOfPlayer) {
+                        round++;
+                        mapPane.setVisible(false);
+                    }
+                }
+            }
+        });
+        enterTownButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                mapPaneDialog.setText("");
+                mapPane.setVisible(false);
+                townPane.setVisible(true);
+            }
+        });
+        passButton.setText("Pass");
+        enterTownButton.setText("enter Town");
+        mapPane.add(passButton, 5, 3);
+        mapPane.add(enterTownButton, 5, 4);
 
 
         // //The button event for the login button
