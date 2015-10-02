@@ -9,7 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Random;
 
 public class MainController implements Initializable {
 
@@ -90,23 +92,25 @@ public class MainController implements Initializable {
     private GridPane townPane;
     @FXML
     private Label mapPaneDialog;
+    @FXML
+    private Label mapPaneDialog1;
 
-
+    Timer timer = new Timer();
     int[] settings = new int[3];
-    int[] playerRace = new int[4];
-    String[] playerName = new String[4];
     int count = 0;
     int numOfPlayer;
-    Color[] playerColor = new Color[4];
+    Player[] player = new Player[4];
     Button[][] buttons = new Button[4][4];
     int turn = 0;
     int round = 0;
     Label[] playerInfoDisplay = new Label[4];
     int numOfPasses = 0;
-    int[] playerMoney = new int[4];
     Button passButton = new Button();
     Button enterTownButton = new Button();
     Button[] townOptionButton = new Button[4];
+    int time = 1000;
+    int[] actTurn = new int[4];
+    Random rand = new Random();
 
     @FXML
     private void openPane2(ActionEvent e) {
@@ -149,55 +153,81 @@ public class MainController implements Initializable {
         if (!currentPlayerName.getText().equals("ddd")) {
             if (count < numOfPlayer) {
                 count++;
-                currentPlayer.setText("Player" + count);
-                playerName[count - 1] = currentPlayerName.getText();
-                playerColor[count - 1] = colorPicker.getValue();
+                currentPlayer.setText("Player" + (count + 1));
+                player[count - 1].setName(currentPlayerName.getText());
+                player[count - 1].setColor(colorPicker.getValue());
                 currentPlayerName.clear();
                 if (e.getSource().toString().equals("Button[id=mechtronButton, styleClass=button]'MECHTRON'")) {
-                    playerRace[count - 1] = 0;
-                    dialog.setText("Player " + count + "chose MECHTRON!\n Player"  + count + " is choosing now!");
+                    player[count - 1].setRace(0);
+                    dialog.setText("Player " + count + "chose MECHTRON!\n Player"  + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=gollumerButton, styleClass=button]'GOLLUMER'")) {
-                    playerRace[count - 1] = 1;
+                    player[count - 1].setRace(1);
                     dialog.setText("Player " + count + "chose GOLLUMER!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=packerButton, styleClass=button]'PACKER'")) {
-                    playerRace[count - 1] = 2;
+                    player[count - 1].setRace(2);
                     dialog.setText("Player " + count + "chose PACKER!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=bonzoidButton, styleClass=button]'BONZOID'")) {
-                    playerRace[count - 1] = 3;
+                    player[count - 1].setRace(3);
                     dialog.setText("Player " + count + "chose BONZOID!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=spheroidButton, styleClass=button]'SPHEROID'")) {
-                    playerRace[count - 1] = 4;
+                    player[count - 1].setRace(4);
                     dialog.setText("Player " + count + "chose SPHEROID!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=flapperButton, styleClass=button]'FLAPPER'")) {
-                    playerRace[count - 1] = 5;
+                    player[count - 1].setRace(5);
                     dialog.setText("Player " + count + "chose FLAPPER!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=leggiteButton, styleClass=button]'LEGGITE'")) {
-                    playerRace[count - 1] = 6;
+                    player[count - 1].setRace(6);
                     dialog.setText("Player " + count + "chose LEGGITE!\n Player" + (count + 1) + " is choosing now!");
                 }
                 if (e.getSource().toString().equals("Button[id=humanoidButton, styleClass=button]'HUMANOID'")) {
-                    playerRace[count - 1] = 7;
+                    player[count - 1].setRace(7);
                     dialog.setText("Player " + count + "chose HUMANOID!\n Player" + (count + 1) + " is choosing now!");
                 }
-                String s = "Map Tile";
-                if (settings[2] == 1) {
-                    s = "Flattile";
-                } else if (settings[2] == 2) {
-                    s = "River";
-                } else if (settings[2] == 3) {
-                    s = "Mountain";
-                }
                 if (count >= numOfPlayer) {
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        @Override
+                        public void run() {
+                            time--;
+                            javafx.application.Platform.runLater(new java.lang.Runnable() {
+                                @Override
+                                public void run() {
+                                    mapPaneDialog1.setText(String.format("player %d has %d time left", actTurn[turn] + 1, time));
+                                    //mapPaneDialog1.setText("" + time);
+                                }
+                            });
+
+                            if (time <= 0) {
+                                turn++;
+                                time = player[actTurn[turn]].getScore();
+                                System.out.println(player[actTurn[turn - 1]].getMoney());
+                                if (turn >= numOfPlayer) {
+                                    turn = turn % numOfPlayer;
+                                    round++;
+                                    getPlayerTurns();
+                                }
+                            }
+                        }
+                    }, 0, 100);
                     playerConfig.setVisible(false);
                     mapPane.setVisible(true);
                     for (int i = 0; i < 4; i++) {
                         for (int j = 0; j < 4; j++) {
+                            String s = "Map Tile";
+                            int r = rand.nextInt();
+                            r = (((r % 3) + 3) % 3) + 1;
+                            if (r == 1) {
+                                s = "Flattile";
+                            } else if (r == 2) {
+                                s = "River";
+                            } else if (r == 3) {
+                                s = "Mountain";
+                            }
                             buttons[i][j] = new Button(s);
                             buttons[i][j].setMaxHeight(10000);
                             buttons[i][j].setMaxWidth(10000);
@@ -213,7 +243,7 @@ public class MainController implements Initializable {
                     }
                     for (int i = 0; i < numOfPlayer; i++) {
                         playerInfoDisplay[i] = new Label();
-                        playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, playerMoney[i]));
+                        playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, player[i].getMoney()));
                         playerInfoDisplay[i].setMaxWidth(10000);
                         playerInfoDisplay[i].setMaxHeight(10);
                         mapPane.add(playerInfoDisplay[i], 5, i);
@@ -224,7 +254,7 @@ public class MainController implements Initializable {
                 playerConfig.setVisible(false);
                 mapPane.setVisible(true);
                 for (int i = 0; i < numOfPlayer; i++) {
-                    System.out.print(playerColor[i]);
+                    System.out.print(player[i].getColor());
                 }
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -255,42 +285,69 @@ public class MainController implements Initializable {
     public void changeTileColor(int i, int j) {
         if (round < 2) {
             if (buttons[i][j].getStyle().equals("")) {
-                buttons[i][j].setStyle(String.format("-fx-base: #%h", playerColor[turn]));
-                playerInfoDisplay[turn].setText(String.format("player %d has %d dollars", turn + 1 , playerMoney[turn]));
-                turn++;
-                if (turn >= numOfPlayer) {
-                    turn = turn % numOfPlayer;
-                    round++;
-                }
-
+                buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
+                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
+                player[actTurn[turn]].claimLand(i, j);
+                time = 0;
             }
         } else {
-            if (buttons[i][j].getStyle().equals("") && playerMoney[turn] >= 500) {
+            if (buttons[i][j].getStyle().equals("") && player[actTurn[turn]].getMoney() >= 500) {
                 numOfPasses = 0;
                 mapPaneDialog.setText("");
-                playerMoney[turn] -= 500;
-                buttons[i][j].setStyle(String.format("-fx-base: #%h", playerColor[turn]));
-                playerInfoDisplay[turn].setText(String.format("player %d has %d dollars", turn + 1 , playerMoney[turn]));
-                turn++;
-                if (turn >= numOfPlayer) {
-                    turn = turn % numOfPlayer;
-                }
+                player[actTurn[turn]].changeMoney(-500);
+                buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
+                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
+                player[actTurn[turn]].claimLand(i, j);
+                time = 0;
             } else {
                 mapPaneDialog.setText("player doesn't have enough money or it's already bought");
             }
         }
     }
 
+    public void getPlayerTurns() {
+        for (int i = 0; i < numOfPlayer; i++) {
+            int localMax = 0;
+            int index = 0;
+            for (int j = 0; j < numOfPlayer; j++) {
+                int score = player[j].getScore();
+                if (score > localMax) {
+                    if (i > 0) {
+                        if (player[actTurn[i-1]].getScore() >= score) {
+                            boolean isItOk = true;
+                            for (int k = 0; k < i; k++) {
+                                if (actTurn[k] == j) {
+                                    isItOk = false;
+                                }
+                            }
+                            if (isItOk) {
+                                localMax = score;
+                                index = j;
+                            }
+                        }
+                    } else {
+                        localMax = score;
+                        index = j;
+                    }
+                }
+            }
+            actTurn[i] = index;
+        }
+        for (int i = 0; i < numOfPlayer; i++) {
+            System.out.print(" " + actTurn[i] + " ");
+        }
+        System.out.println();
+    }
+
     public void townOptionEvent(int i) {
         if (i == 2) {
-            playerMoney[turn] += 100; //add money relative to timer remaining
-            turn++;
-            if (turn >= numOfPlayer) {
-                turn = turn % numOfPlayer;
-                round++;
+            if (round >= 2) {
+                player[actTurn[turn]].changeMoney(time); //add money relative to timer remaining
+                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
+                time = 0;
+                mapPane.setVisible(true);
+                townPane.setVisible(false);
             }
-            mapPane.setVisible(true);
-            townPane.setVisible(false);
         }
         if (i == 3) {
             mapPane.setVisible(true);
@@ -321,6 +378,7 @@ public class MainController implements Initializable {
         assert playerConfig != null : "fx identification failed.";
         assert mapPane != null : "fx identification failed.";
         assert colorPicker != null : "fx identification failed.";
+        assert mapPaneDialog1 != null : "fx identification failed.";
 
         startPane.setVisible(true);
         diffPane.setVisible(false);
@@ -329,7 +387,6 @@ public class MainController implements Initializable {
         mapPane.setVisible(false);
         townPane.setVisible(false);
         for (int i = 0; i < 4; i++) {
-            playerMoney[i] = 1000;
             if (i != 2) {
                 townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
             }
@@ -352,10 +409,12 @@ public class MainController implements Initializable {
         passButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 mapPaneDialog.setText("");
-                if (round == 2) {
+                if (round >= 2) {
                     numOfPasses++;
+                    time = 0;
                     if (numOfPasses >= numOfPlayer) {
                         round++;
+                        getPlayerTurns();
                         mapPane.setVisible(false);
                     }
                 }
@@ -372,7 +431,10 @@ public class MainController implements Initializable {
         enterTownButton.setText("enter Town");
         mapPane.add(passButton, 5, 3);
         mapPane.add(enterTownButton, 5, 4);
-
+        for (int i = 0; i < 4; i++) {
+            actTurn[i] = i;
+            player[i] = new Player();
+        }
 
         // //The button event for the login button
         // loginButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -381,5 +443,5 @@ public class MainController implements Initializable {
         //         System.out.println("This button works");
         //     }
         // });
-        }
     }
+}

@@ -108,6 +108,7 @@
         </rowConstraints>
          <children>
             <Label fx:id="mapPaneDialog" prefHeight="154.0" prefWidth="513.0" GridPane.rowIndex="4" />
+            <Label fx:id="mapPaneDialog1" prefHeight="154.0" prefWidth="513.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
       <GridPane fx:id="townPane" prefHeight="773.0" prefWidth="1024.0">
