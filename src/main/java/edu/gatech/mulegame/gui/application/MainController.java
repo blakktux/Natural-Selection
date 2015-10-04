@@ -21,50 +21,50 @@ public class MainController implements Initializable {
     // @FXML // URL location of the FXML file that was given to the FXMLLoader
     // private URL location;
 
-    @FXML // fx:id="loginButton"
-    private Button startButton; // Value injected by FXMLLoader
+    @FXML
+    private Button startButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button easyMode; // Value injected by FXMLLoader
+    @FXML
+    private Button easyMode;
 
-    @FXML // fx:id="loginButton"
-    private Button hardMode; // Value injected by FXMLLoader
+    @FXML
+    private Button hardMode;
 
-    @FXML // fx:id="newUserButton"
-    private Button mediumMode; // Value injected by FXMLLoader
+    @FXML
+    private Button mediumMode;
 
-    @FXML // fx:id="loginButton"
-    private Button mountainButton; // Value injected by FXMLLoader
+    @FXML
+    private Button mountainButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button riverButton; // Value injected by FXMLLoader
+    @FXML
+    private Button riverButton;
 
-    @FXML // fx:id="loginButton"
-    private Button flatlandButton; // Value injected by FXMLLoader
+    @FXML
+    private Button flatlandButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button flapperButton; // Value injected by FXMLLoader
+    @FXML
+    private Button flapperButton;
 
-    @FXML // fx:id="loginButton"
-    private Button leggiteButton; // Value injected by FXMLLoader
+    @FXML
+    private Button leggiteButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button humanoidButton; // Value injected by FXMLLoader
+    @FXML
+    private Button humanoidButton;
 
-    @FXML // fx:id="loginButton"
-    private Button mechtronButton; // Value injected by FXMLLoader
+    @FXML
+    private Button mechtronButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button gollumerButton; // Value injected by FXMLLoader
+    @FXML
+    private Button gollumerButton;
 
-    @FXML // fx:id="loginButton"
-    private Button packerButton; // Value injected by FXMLLoader
+    @FXML
+    private Button packerButton;
 
-    @FXML // fx:id="newUserButton"
-    private Button bonzoidButton; // Value injected by FXMLLoader
+    @FXML
+    private Button bonzoidButton;
 
-    @FXML // fx:id="loginButton"
-    private Button spheroidButton; // Value injected by FXMLLoader
+    @FXML
+    private Button spheroidButton;
 
     @FXML
     private Slider playerCount;
@@ -94,6 +94,8 @@ public class MainController implements Initializable {
     private Label mapPaneDialog;
     @FXML
     private Label mapPaneDialog1;
+    @FXML
+    private GridPane outfitPane;
 
     Timer timer = new Timer();
     int[] settings = new int[3];
@@ -111,6 +113,9 @@ public class MainController implements Initializable {
     int time = 1000;
     int[] actTurn = new int[4];
     Random rand = new Random();
+    Tile[][] tiles = new Tile[4][4];
+    boolean installingMule = false;
+    Button[][] outfitButton = new Button[2][2];
 
     @FXML
     private void openPane2(ActionEvent e) {
@@ -148,6 +153,7 @@ public class MainController implements Initializable {
         playerConfig.setVisible(true);
         currentPlayer.setText("Player 1");
     }
+
     @FXML
     private void playerDone(ActionEvent e) {
         if (!currentPlayerName.getText().equals("ddd")) {
@@ -205,10 +211,23 @@ public class MainController implements Initializable {
                             if (time <= 0) {
                                 turn++;
                                 time = player[actTurn[turn]].getScore();
-                                System.out.println(player[actTurn[turn - 1]].getMoney());
+                                //System.out.println(player[actTurn[turn - 1]].getMoney());
                                 if (turn >= numOfPlayer) {
                                     turn = turn % numOfPlayer;
                                     round++;
+                                    if (round >= 2) {
+                                        for (int i = 0; i < numOfPlayer; i++) {
+                                            player[i].produce();
+                                            final int k = i;
+                                            javafx.application.Platform.runLater(new java.lang.Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playerInfoDisplay[k].setText(String.format("player %d has %d dollars", k + 1 , player[k].getMoney()));
+                                                    //mapPaneDialog1.setText("" + time);
+                                                }
+                                            });
+                                        }
+                                    }
                                     getPlayerTurns();
                                 }
                             }
@@ -232,6 +251,7 @@ public class MainController implements Initializable {
                             buttons[i][j].setMaxHeight(10000);
                             buttons[i][j].setMaxWidth(10000);
                             mapPane.add(buttons[i][j], i, j);
+                            tiles[i][j] = new Tile();
                             final int k = i;
                             final int l = j;
                             buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
@@ -250,32 +270,7 @@ public class MainController implements Initializable {
                     }
                 }
             } else {
-
-                playerConfig.setVisible(false);
-                mapPane.setVisible(true);
-                for (int i = 0; i < numOfPlayer; i++) {
-                    System.out.print(player[i].getColor());
-                }
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        buttons[i][j] = new Button("Map Tile");
-                        buttons[i][j].setMaxHeight(10000);
-                        buttons[i][j].setMaxWidth(10000);
-                        mapPane.add(buttons[i][j], i, j);
-                        final int k = i;
-                        final int l = j;
-                        buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
-                            public void handle (ActionEvent e) {
-                                changeTileColor(k, l);
-                            }
-                        });
-                    }
-                    playerInfoDisplay[i] = new Label();
-                    playerInfoDisplay[i].setMaxWidth(10000);
-                    playerInfoDisplay[i].setMaxHeight(10000);
-                    mapPane.add(playerInfoDisplay[i], 5, i);
-                }
-
+                System.out.println("something went wrong");
             }
         } else {
             dialog.setText("Invalid name");
@@ -287,20 +282,31 @@ public class MainController implements Initializable {
             if (buttons[i][j].getStyle().equals("")) {
                 buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
                 playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                player[actTurn[turn]].claimLand(i, j);
+                player[actTurn[turn]].claimLand(tiles[i][j]);
                 time = 0;
             }
         } else {
+            if (installingMule) {
+                Player owner = tiles[i][j].getOwner();
+                if (owner != player[actTurn[turn]]) {
+                    player[actTurn[turn]].lostMule();
+                } else {
+                    owner.installMule(tiles[i][j]);
+                    mapPaneDialog.setText("player successfully installed mule!");
+                }
+                installingMule = false;
+                return;
+            }
             if (buttons[i][j].getStyle().equals("") && player[actTurn[turn]].getMoney() >= 500) {
                 numOfPasses = 0;
                 mapPaneDialog.setText("");
                 player[actTurn[turn]].changeMoney(-500);
                 buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
                 playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                player[actTurn[turn]].claimLand(i, j);
+                player[actTurn[turn]].claimLand(tiles[i][j]);
                 time = 0;
-            } else {
-                mapPaneDialog.setText("player doesn't have enough money or it's already bought");
+            } else if (player[actTurn[turn]].getMoney() < 500) {
+                mapPaneDialog.setText("player doesn't have enough money");
             }
         }
     }
@@ -333,13 +339,26 @@ public class MainController implements Initializable {
             }
             actTurn[i] = index;
         }
-        for (int i = 0; i < numOfPlayer; i++) {
+        /*for (int i = 0; i < numOfPlayer; i++) {
             System.out.print(" " + actTurn[i] + " ");
         }
-        System.out.println();
+        System.out.println()*/;
     }
 
     public void townOptionEvent(int i) {
+        if (i == 1) {
+            if (player[actTurn[turn]].canBuyMule() && round >= 2) {
+                if (round >= 2 && player[actTurn[turn]].getMoney() >= 500) {
+                    player[actTurn[turn]].changeMoney(-500);
+                    playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
+                    outfitPane.setVisible(true);
+                    townPane.setVisible(false);
+                    mapPaneDialog.setText("installing Mule");
+                    player[actTurn[turn]].obtainMule();
+                    installingMule = true;
+                }
+            }
+        }
         if (i == 2) {
             if (round >= 2) {
                 player[actTurn[turn]].changeMoney(time); //add money relative to timer remaining
@@ -379,6 +398,7 @@ public class MainController implements Initializable {
         assert mapPane != null : "fx identification failed.";
         assert colorPicker != null : "fx identification failed.";
         assert mapPaneDialog1 != null : "fx identification failed.";
+        assert outfitPane != null : "fx ident. failed";
 
         startPane.setVisible(true);
         diffPane.setVisible(false);
@@ -386,13 +406,9 @@ public class MainController implements Initializable {
         playerConfig.setVisible(false);
         mapPane.setVisible(false);
         townPane.setVisible(false);
+        outfitPane.setVisible(false);
         for (int i = 0; i < 4; i++) {
-            if (i != 2) {
-                townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
-            }
-            if (i == 2) {
-                townOptionButton[i] = new Button("Gamble");
-            }
+            townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
             final int k = i;
             townOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
@@ -401,6 +417,8 @@ public class MainController implements Initializable {
             });
             townPane.add(townOptionButton[i], i%2, i/2);
         }
+        townOptionButton[1].setText("Buy Mule");
+        townOptionButton[2].setText("Gamble");
 
 
 
@@ -436,12 +454,19 @@ public class MainController implements Initializable {
             player[i] = new Player();
         }
 
-        // //The button event for the login button
-        // loginButton.setOnAction(new EventHandler<ActionEvent>() {
-        //
-        //     public void handle(ActionEvent e)   {
-        //         System.out.println("This button works");
-        //     }
-        // });
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                outfitButton[i][j] = new Button(String.format("resource %d", i * 2 + j));
+                final int r = i * 2 + j;
+                outfitButton[i][j].setOnAction(new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent e) {
+                        player[actTurn[turn]].outfitMule(r, 10);
+                        outfitPane.setVisible(false);
+                        mapPane.setVisible(true);
+                    }
+                });
+                outfitPane.add(outfitButton[i][j], i, j);
+            }
+        }
     }
 }
