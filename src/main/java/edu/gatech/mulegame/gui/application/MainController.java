@@ -96,7 +96,10 @@ public class MainController implements Initializable {
     private Label mapPaneDialog1;
     @FXML
     private GridPane outfitPane;
-
+    @FXML
+    private GridPane storePane;
+    
+    
     Timer timer = new Timer();
     int[] settings = new int[3];
     int count = 0;
@@ -116,6 +119,8 @@ public class MainController implements Initializable {
     Tile[][] tiles = new Tile[4][4];
     boolean installingMule = false;
     Button[][] outfitButton = new Button[2][2];
+    Button[] storeOptionButton = new Button[8];
+    Label storeDialog = new Label("Welcome to Store");
 
     @FXML
     private void openPane2(ActionEvent e) {
@@ -346,6 +351,10 @@ public class MainController implements Initializable {
     }
 
     public void townOptionEvent(int i) {
+        if (i == 0) {
+            storePane.setVisible(true);
+            townPane.setVisible(false);
+        }
         if (i == 1) {
             if (player[actTurn[turn]].canBuyMule() && round >= 2) {
                 if (round >= 2 && player[actTurn[turn]].getMoney() >= 500) {
@@ -361,7 +370,7 @@ public class MainController implements Initializable {
         }
         if (i == 2) {
             if (round >= 2) {
-                player[actTurn[turn]].changeMoney(time); //add money relative to timer remaining
+                player[actTurn[turn]].changeMoney(time);
                 playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
                 time = 0;
                 mapPane.setVisible(true);
@@ -374,6 +383,50 @@ public class MainController implements Initializable {
         }
     }
 
+    public void storeOptionEvent(int i) {
+        if (i < 3) {
+            //buy
+            if (player[actTurn[turn]].getMoney() >= 100) {
+                player[actTurn[turn]].changeMoney(-100);
+                player[actTurn[turn]].changeResource(i,1);
+                if (i == 0) {
+                    storeDialog.setText(String.format("player %d has %d food", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
+                }
+                if (i == 1) {
+                    storeDialog.setText(String.format("player %d has %d energy", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
+                }
+                if (i == 2) {
+                    storeDialog.setText(String.format("player %d has %d smithore", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
+                }
+            } else {
+                storeDialog.setText(String.format("player %d doesn't have enough money", actTurn[turn] + 1));
+            }
+        }
+        if (i > 2 && i < 6) {
+            //sell
+            if (player[actTurn[turn]].getResource(i - 3) >= 1) {
+                player[actTurn[turn]].changeMoney(100);
+                player[actTurn[turn]].changeResource(i - 3,-1);
+                if (i == 3) {
+                    storeDialog.setText(String.format("player %d has %d food", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
+                }
+                if (i == 4) {
+                    storeDialog.setText(String.format("player %d has %d energy", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
+                }
+                if (i == 5) {
+                    storeDialog.setText(String.format("player %d has %d smithore", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
+                }
+            } else {
+                storeDialog.setText(String.format("player %d doesn't have enough resources", actTurn[turn] + 1));
+            }
+        }
+        if (i == 6) {
+            storePane.setVisible(false);
+            townPane.setVisible(true);
+        }
+        playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
+    }
+    
     public void initialize(URL location, ResourceBundle resources) {
 
         assert startButton != null : "fx identification failed.";
@@ -407,6 +460,7 @@ public class MainController implements Initializable {
         mapPane.setVisible(false);
         townPane.setVisible(false);
         outfitPane.setVisible(false);
+        storePane.setVisible(false);
         for (int i = 0; i < 4; i++) {
             townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
             final int k = i;
@@ -417,10 +471,28 @@ public class MainController implements Initializable {
             });
             townPane.add(townOptionButton[i], i%2, i/2);
         }
+        townOptionButton[0].setText("Resource Store");
         townOptionButton[1].setText("Buy Mule");
         townOptionButton[2].setText("Gamble");
 
-
+        for (int i = 0; i < 7; i++) {
+            storeOptionButton[i] = new Button(String.format("store Option %d", i + 1));
+            final int k = i;
+            storeOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e) {
+                    storeOptionEvent(k);
+                }
+            });
+            storePane.add(storeOptionButton[i], i%2, i/2);
+        }
+        storeOptionButton[0].setText("Buy Food");
+        storeOptionButton[1].setText("Buy Energy");
+        storeOptionButton[2].setText("Buy Smithore");
+        storeOptionButton[3].setText("Sell Food");
+        storeOptionButton[4].setText("Sell Energy");
+        storeOptionButton[5].setText("Sell Smithore");
+        storeOptionButton[6].setText("Leave Store");
+        storePane.add(storeDialog, 4, 4);
 
 
 

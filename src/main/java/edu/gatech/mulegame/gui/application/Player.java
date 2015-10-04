@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Player {
+    private int[] resource;
     private String name;
     private int race;
     private Color color;
@@ -20,9 +21,17 @@ public class Player {
         ownedTiles = new ArrayList<>();
         boughtMule = null;
         outfittedMule = null;
+        resource = new int[4];
     }
 
-
+    public void changeResource(int type, int amount) { //0 is food, 1 is energy, 2 is smithore
+        resource[type] += amount;
+    }
+    
+    public int getResource(int type) {
+        return resource[type];
+    }
+    
     public int getScore() {
         return numOfLand * 500 + money + ownedMules * 500;
     }
