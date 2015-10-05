@@ -1,17 +1,27 @@
 package application;
 
 import java.net.URL;
+<<<<<<< HEAD
+import java.util.*;
+
+import application.model.Player;
+import application.model.Tile;
+=======
 import java.util.ResourceBundle;
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+<<<<<<< HEAD
+=======
 import javafx.scene.paint.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
 
 public class MainController implements Initializable {
 
@@ -300,7 +310,11 @@ public class MainController implements Initializable {
             if (buttons[i][j].getStyle().equals("") && player[actTurn[turn]].getMoney() >= 500) {
                 numOfPasses = 0;
                 mapPaneDialog.setText("");
+<<<<<<< HEAD
+                player[actTurn[turn]].addMoney(-500);
+=======
                 player[actTurn[turn]].changeMoney(-500);
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
                 buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
                 playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
                 player[actTurn[turn]].claimLand(tiles[i][j]);
@@ -349,7 +363,11 @@ public class MainController implements Initializable {
         if (i == 1) {
             if (player[actTurn[turn]].canBuyMule() && round >= 2) {
                 if (round >= 2 && player[actTurn[turn]].getMoney() >= 500) {
+<<<<<<< HEAD
+                    player[actTurn[turn]].addMoney(-500);
+=======
                     player[actTurn[turn]].changeMoney(-500);
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
                     playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
                     outfitPane.setVisible(true);
                     townPane.setVisible(false);
@@ -361,7 +379,11 @@ public class MainController implements Initializable {
         }
         if (i == 2) {
             if (round >= 2) {
+<<<<<<< HEAD
+                player[actTurn[turn]].addMoney(time); //add money relative to timer remaining
+=======
                 player[actTurn[turn]].changeMoney(time); //add money relative to timer remaining
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
                 playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
                 time = 0;
                 mapPane.setVisible(true);
@@ -449,9 +471,17 @@ public class MainController implements Initializable {
         enterTownButton.setText("enter Town");
         mapPane.add(passButton, 5, 3);
         mapPane.add(enterTownButton, 5, 4);
+<<<<<<< HEAD
+
+        //add players
+        for (int i = 0; i < 4; i++) {
+            actTurn[i] = i;
+            player[i] = new Player(i);
+=======
         for (int i = 0; i < 4; i++) {
             actTurn[i] = i;
             player[i] = new Player();
+>>>>>>> 8c75609a307ab7eb1548ff9e2e242a20164bb3c7
         }
 
         for (int i = 0; i < 2; i++) {
