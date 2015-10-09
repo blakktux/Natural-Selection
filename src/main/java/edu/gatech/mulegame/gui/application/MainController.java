@@ -98,22 +98,22 @@ public class MainController implements Initializable {
     private GridPane outfitPane;
     @FXML
     private GridPane storePane;
-    
-    
+
+
     Timer timer = new Timer();
     int[] settings = new int[3];
     int count = 0;
     int numOfPlayer;
     Player[] player = new Player[4];
     Button[][] buttons = new Button[4][4];
-    int turn = 0;
+    int turn = -1;
     int round = 0;
     Label[] playerInfoDisplay = new Label[4];
     int numOfPasses = 0;
     Button passButton = new Button();
     Button enterTownButton = new Button();
     Button[] townOptionButton = new Button[4];
-    int time = 1000;
+    int time = 0;
     int[] actTurn = new int[4];
     Random rand = new Random();
     Tile[][] tiles = new Tile[4][4];
@@ -215,26 +215,27 @@ public class MainController implements Initializable {
 
                             if (time <= 0) {
                                 turn++;
-                                time = player[actTurn[turn]].getScore();
-                                //System.out.println(player[actTurn[turn - 1]].getMoney());
                                 if (turn >= numOfPlayer) {
                                     turn = turn % numOfPlayer;
                                     round++;
                                     if (round >= 2) {
                                         for (int i = 0; i < numOfPlayer; i++) {
                                             player[i].produce();
-                                            final int k = i;
-                                            javafx.application.Platform.runLater(new java.lang.Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    playerInfoDisplay[k].setText(String.format("player %d has %d dollars", k + 1 , player[k].getMoney()));
-                                                    //mapPaneDialog1.setText("" + time);
-                                                }
-                                            });
                                         }
                                     }
                                     getPlayerTurns();
                                 }
+                                RandomEventHandler.eventHandler(rand, player[actTurn[turn]], actTurn[numOfPlayer - 1] == actTurn[turn]);
+                                time = player[actTurn[turn]].getScore();
+                                //System.out.println(player[actTurn[turn - 1]].getMoney());
+                                final int k = actTurn[turn];
+                                javafx.application.Platform.runLater(new java.lang.Runnable() {
+                                    @Override
+                                    public void run() {
+                                        playerInfoDisplay[k].setText(String.format("player %d has %d dollars", k + 1 , player[k].getMoney()));
+                                        //mapPaneDialog1.setText("" + time);
+                                    }
+                                });
                             }
                         }
                     }, 0, 100);
@@ -426,7 +427,7 @@ public class MainController implements Initializable {
         }
         playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
     }
-    
+
     public void initialize(URL location, ResourceBundle resources) {
 
         assert startButton != null : "fx identification failed.";
