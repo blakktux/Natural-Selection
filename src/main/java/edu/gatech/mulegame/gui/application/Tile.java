@@ -3,10 +3,12 @@ package application;
 public class Tile {
     private Mule mule;
     private Player owner;
+    private int power;
 
 
     public Tile() {
         this.mule = null;
+        this.power = 10;
     }
 
     public Mule installMule(Mule mule) {
@@ -22,15 +24,21 @@ public class Tile {
         this.owner = owner;
     }
 
+    public void increasePower(int rate) {
+        this.power += rate;
+    }
+
     public Player getOwner() {
         return owner;
     }
 
-    public int produce() {
-        if (this.mule != null) {
+    public void produce() {
+        if (mule != null) {
             //System.out.println(this.mule.produce()[1]);
-            return this.mule.produce()[1];
+            if (power >= 5) {
+                power -= 5;
+                owner.changeResource(mule.getResource(), mule.getRate());
+            }
         }
-        return 0;
     }
 }

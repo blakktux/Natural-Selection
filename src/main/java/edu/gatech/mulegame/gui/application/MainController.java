@@ -232,7 +232,7 @@ public class MainController implements Initializable {
                                 javafx.application.Platform.runLater(new java.lang.Runnable() {
                                     @Override
                                     public void run() {
-                                        playerInfoDisplay[k].setText(String.format("player %d has %d dollars", k + 1 , player[k].getMoney()));
+                                        playerInfoDisplay[k].setText(String.format("player %d has %d dollars resource1: %d resource2: %d resource3 %d", k + 1 , player[k].getMoney(), player[k].getResource(0), player[k].getResource(1), player[k].getResource(2)));
                                         //mapPaneDialog1.setText("" + time);
                                     }
                                 });

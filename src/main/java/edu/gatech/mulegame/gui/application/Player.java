@@ -27,11 +27,11 @@ public class Player {
     public void changeResource(int type, int amount) { //0 is food, 1 is energy, 2 is smithore
         resource[type] += amount;
     }
-    
+
     public int getResource(int type) {
         return resource[type];
     }
-    
+
     public int getScore() {
         return numOfLand * 500 + money + ownedMules * 500;
     }
@@ -102,7 +102,7 @@ public class Player {
 
     public boolean installMule(Tile tile) {
         if (outfittedMule != null) {
-            System.out.println(outfittedMule.produce());
+            //System.out.println(outfittedMule.produce());
             tile.installMule(outfittedMule);
             outfittedMule = null;
             return true;
@@ -125,8 +125,8 @@ public class Player {
 
     public void produce() {
         for (Tile i : ownedTiles) {
-            this.money += i.produce() * 100;
-            System.out.println(i.produce());
+            i.produce();
+            //System.out.println(i.produce());
         }
     }
 

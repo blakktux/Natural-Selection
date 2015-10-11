@@ -21,11 +21,11 @@ public class Mule {
         this.rate = rate;
         this.resource = resource;
     }
-
-    public int[] produce() {
-        int[] ret = new int[2];
-        ret[0] = this.resource;
-        ret[1] = this.rate;
-        return ret;
-    }
+    // 
+    // public int[] produce() {
+    //     int[] ret = new int[2];
+    //     ret[0] = this.resource;
+    //     ret[1] = this.rate;
+    //     return ret;
+    // }
 }
