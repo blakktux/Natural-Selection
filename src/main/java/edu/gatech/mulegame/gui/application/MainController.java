@@ -121,10 +121,12 @@ public class MainController implements Initializable {
     Button[][] outfitButton = new Button[2][2];
     Button[] storeOptionButton = new Button[8];
     Label storeDialog = new Label("Welcome to Store");
+    MainController2 controller;
 
     @FXML
     private void openPane2(ActionEvent e) {
         numOfPlayer = (int) playerCount.getValue();
+        controller.setPlayerNum(numOfPlayer);
         startPane.setVisible(false);
         diffPane.setVisible(true);
     }
@@ -204,76 +206,24 @@ public class MainController implements Initializable {
                     timer.scheduleAtFixedRate(new TimerTask() {
                         @Override
                         public void run() {
-                            time--;
+                            time = controller.updateTime();
                             javafx.application.Platform.runLater(new java.lang.Runnable() {
                                 @Override
                                 public void run() {
-                                    mapPaneDialog1.setText(String.format("player %d has %d time left", actTurn[turn] + 1, time));
+                                    mapPaneDialog1.setText(String.format("player %d has %d time left", turn + 1, time));
                                     //mapPaneDialog1.setText("" + time);
                                 }
                             });
-
                             if (time <= 0) {
-                                turn++;
-                                if (turn >= numOfPlayer) {
-                                    turn = turn % numOfPlayer;
-                                    round++;
-                                    if (round >= 2) {
-                                        for (int i = 0; i < numOfPlayer; i++) {
-                                            player[i].produce();
-                                        }
-                                    }
-                                    getPlayerTurns();
-                                }
-                                RandomEventHandler.eventHandler(rand, player[actTurn[turn]], actTurn[numOfPlayer - 1] == actTurn[turn]);
-                                time = player[actTurn[turn]].getScore();
-                                //System.out.println(player[actTurn[turn - 1]].getMoney());
-                                final int k = actTurn[turn];
-                                javafx.application.Platform.runLater(new java.lang.Runnable() {
-                                    @Override
-                                    public void run() {
-                                        playerInfoDisplay[k].setText(String.format("player %d has %d dollars resource1: %d resource2: %d resource3 %d", k + 1 , player[k].getMoney(), player[k].getResource(0), player[k].getResource(1), player[k].getResource(2)));
-                                        //mapPaneDialog1.setText("" + time);
-                                    }
-                                });
+                                turn = controller.nextTurn(numOfPlayer);
+                                time = controller.calcTime(turn);
+                                controller.updatePlayerInfoDisplay(turn, playerInfoDisplay);
                             }
                         }
                     }, 0, 100);
                     playerConfig.setVisible(false);
                     mapPane.setVisible(true);
-                    for (int i = 0; i < 4; i++) {
-                        for (int j = 0; j < 4; j++) {
-                            String s = "Map Tile";
-                            int r = rand.nextInt();
-                            r = (((r % 3) + 3) % 3) + 1;
-                            if (r == 1) {
-                                s = "Flattile";
-                            } else if (r == 2) {
-                                s = "River";
-                            } else if (r == 3) {
-                                s = "Mountain";
-                            }
-                            buttons[i][j] = new Button(s);
-                            buttons[i][j].setMaxHeight(10000);
-                            buttons[i][j].setMaxWidth(10000);
-                            mapPane.add(buttons[i][j], i, j);
-                            tiles[i][j] = new Tile();
-                            final int k = i;
-                            final int l = j;
-                            buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
-                                public void handle (ActionEvent e) {
-                                    changeTileColor(k, l);
-                                }
-                            });
-                        }
-                    }
-                    for (int i = 0; i < numOfPlayer; i++) {
-                        playerInfoDisplay[i] = new Label();
-                        playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, player[i].getMoney()));
-                        playerInfoDisplay[i].setMaxWidth(10000);
-                        playerInfoDisplay[i].setMaxHeight(10);
-                        mapPane.add(playerInfoDisplay[i], 5, i);
-                    }
+                    generateMap();
                 }
             } else {
                 System.out.println("something went wrong");
@@ -283,150 +233,43 @@ public class MainController implements Initializable {
         }
     }
 
-    public void changeTileColor(int i, int j) {
-        if (round < 2) {
-            if (buttons[i][j].getStyle().equals("")) {
-                buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
-                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                player[actTurn[turn]].claimLand(tiles[i][j]);
-                time = 0;
-            }
-        } else {
-            if (installingMule) {
-                Player owner = tiles[i][j].getOwner();
-                if (owner != player[actTurn[turn]]) {
-                    player[actTurn[turn]].lostMule();
-                } else {
-                    owner.installMule(tiles[i][j]);
-                    mapPaneDialog.setText("player successfully installed mule!");
-                }
-                installingMule = false;
-                return;
-            }
-            if (buttons[i][j].getStyle().equals("") && player[actTurn[turn]].getMoney() >= 500) {
-                numOfPasses = 0;
-                mapPaneDialog.setText("");
-                player[actTurn[turn]].changeMoney(-500);
-                buttons[i][j].setStyle(String.format("-fx-base: #%h", player[actTurn[turn]].getColor()));
-                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                player[actTurn[turn]].claimLand(tiles[i][j]);
-                time = 0;
-            } else if (player[actTurn[turn]].getMoney() < 500) {
-                mapPaneDialog.setText("player doesn't have enough money");
-            }
-        }
-    }
 
-    public void getPlayerTurns() {
-        for (int i = 0; i < numOfPlayer; i++) {
-            int localMax = 0;
-            int index = 0;
-            for (int j = 0; j < numOfPlayer; j++) {
-                int score = player[j].getScore();
-                if (score > localMax) {
-                    if (i > 0) {
-                        if (player[actTurn[i-1]].getScore() >= score) {
-                            boolean isItOk = true;
-                            for (int k = 0; k < i; k++) {
-                                if (actTurn[k] == j) {
-                                    isItOk = false;
-                                }
-                            }
-                            if (isItOk) {
-                                localMax = score;
-                                index = j;
-                            }
-                        }
-                    } else {
-                        localMax = score;
-                        index = j;
+    public void generateMap() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                String s = "Map Tile";
+                int r = rand.nextInt();
+                r = (((r % 3) + 3) % 3) + 1;
+                if (r == 1) {
+                    s = "Flattile";
+                } else if (r == 2) {
+                    s = "River";
+                } else if (r == 3) {
+                    s = "Mountain";
+                }
+                buttons[i][j] = new Button(s);
+                buttons[i][j].setMaxHeight(10000);
+                buttons[i][j].setMaxWidth(10000);
+                mapPane.add(buttons[i][j], i, j);
+                tiles[i][j] = new Tile();
+                final int k = i;
+                final int l = j;
+                buttons[k][l].setOnAction(new EventHandler<ActionEvent>() {
+                    public void handle (ActionEvent e) {
+                        controller.onTilePress(buttons, tiles, k, l, playerInfoDisplay, mapPaneDialog);
                     }
-                }
-            }
-            actTurn[i] = index;
-        }
-        /*for (int i = 0; i < numOfPlayer; i++) {
-            System.out.print(" " + actTurn[i] + " ");
-        }
-        System.out.println()*/;
-    }
-
-    public void townOptionEvent(int i) {
-        if (i == 0) {
-            storePane.setVisible(true);
-            townPane.setVisible(false);
-        }
-        if (i == 1) {
-            if (player[actTurn[turn]].canBuyMule() && round >= 2) {
-                if (round >= 2 && player[actTurn[turn]].getMoney() >= 500) {
-                    player[actTurn[turn]].changeMoney(-500);
-                    playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                    outfitPane.setVisible(true);
-                    townPane.setVisible(false);
-                    mapPaneDialog.setText("installing Mule");
-                    player[actTurn[turn]].obtainMule();
-                    installingMule = true;
-                }
+                });
             }
         }
-        if (i == 2) {
-            if (round >= 2) {
-                player[actTurn[turn]].changeMoney(time);
-                playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-                time = 0;
-                mapPane.setVisible(true);
-                townPane.setVisible(false);
-            }
-        }
-        if (i == 3) {
-            mapPane.setVisible(true);
-            townPane.setVisible(false);
+        for (int i = 0; i < numOfPlayer; i++) {
+            playerInfoDisplay[i] = new Label();
+            playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, player[i].getMoney()));
+            playerInfoDisplay[i].setMaxWidth(10000);
+            playerInfoDisplay[i].setMaxHeight(10);
+            mapPane.add(playerInfoDisplay[i], 5, i);
         }
     }
 
-    public void storeOptionEvent(int i) {
-        if (i < 3) {
-            //buy
-            if (player[actTurn[turn]].getMoney() >= 100) {
-                player[actTurn[turn]].changeMoney(-100);
-                player[actTurn[turn]].changeResource(i,1);
-                if (i == 0) {
-                    storeDialog.setText(String.format("player %d has %d food", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
-                }
-                if (i == 1) {
-                    storeDialog.setText(String.format("player %d has %d energy", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
-                }
-                if (i == 2) {
-                    storeDialog.setText(String.format("player %d has %d smithore", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i)));
-                }
-            } else {
-                storeDialog.setText(String.format("player %d doesn't have enough money", actTurn[turn] + 1));
-            }
-        }
-        if (i > 2 && i < 6) {
-            //sell
-            if (player[actTurn[turn]].getResource(i - 3) >= 1) {
-                player[actTurn[turn]].changeMoney(100);
-                player[actTurn[turn]].changeResource(i - 3,-1);
-                if (i == 3) {
-                    storeDialog.setText(String.format("player %d has %d food", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
-                }
-                if (i == 4) {
-                    storeDialog.setText(String.format("player %d has %d energy", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
-                }
-                if (i == 5) {
-                    storeDialog.setText(String.format("player %d has %d smithore", actTurn[turn] + 1 , player[actTurn[turn]].getResource(i-3)));
-                }
-            } else {
-                storeDialog.setText(String.format("player %d doesn't have enough resources", actTurn[turn] + 1));
-            }
-        }
-        if (i == 6) {
-            storePane.setVisible(false);
-            townPane.setVisible(true);
-        }
-        playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
-    }
 
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -462,12 +305,13 @@ public class MainController implements Initializable {
         townPane.setVisible(false);
         outfitPane.setVisible(false);
         storePane.setVisible(false);
+        controller = new MainController2(rand);
         for (int i = 0; i < 4; i++) {
             townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
             final int k = i;
             townOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
-                    townOptionEvent(k);
+                    controller.townOptionEvent(k, playerInfoDisplay, mapPaneDialog, storePane, townPane, outfitPane, mapPane);
                 }
             });
             townPane.add(townOptionButton[i], i%2, i/2);
@@ -481,7 +325,7 @@ public class MainController implements Initializable {
             final int k = i;
             storeOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e) {
-                    storeOptionEvent(k);
+                    controller.storeOptionEvent(k, storeDialog, playerInfoDisplay, storePane, townPane);
                 }
             });
             storePane.add(storeOptionButton[i], i%2, i/2);
@@ -500,12 +344,11 @@ public class MainController implements Initializable {
         passButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 mapPaneDialog.setText("");
-                if (round >= 2) {
+                if (controller.getRound() >= 2) {
                     numOfPasses++;
                     time = 0;
                     if (numOfPasses >= numOfPlayer) {
                         round++;
-                        getPlayerTurns();
                         mapPane.setVisible(false);
                     }
                 }
@@ -526,14 +369,14 @@ public class MainController implements Initializable {
             actTurn[i] = i;
             player[i] = new Player();
         }
-
+        controller.setPlayer(player);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 outfitButton[i][j] = new Button(String.format("resource %d", i * 2 + j));
                 final int r = i * 2 + j;
                 outfitButton[i][j].setOnAction(new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent e) {
-                        player[actTurn[turn]].outfitMule(r, 10);
+                        player[turn].outfitMule(r, 10);
                         outfitPane.setVisible(false);
                         mapPane.setVisible(true);
                     }
