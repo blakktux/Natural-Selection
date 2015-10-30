@@ -21,7 +21,7 @@ public class TextLoad {
         return mules.toArray();
     }
 
-    public Player loadPlayer() {
+    public Player[] loadPlayer() {
         String name;
         int race;
         Color color;
