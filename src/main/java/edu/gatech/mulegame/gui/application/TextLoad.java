@@ -58,6 +58,7 @@ public class TextLoad {
             outfittedMule = new Mule(rate, resource);
             ownedMules = Integer.parseInt(saveFile.readLine());
             int size = Integer.parseInt(saveFile.readLine());
+            tiles = new ArrayList<Tile>();
             for (int i = 0; i < size; i++) {
                 rate = Integer.parseInt(saveFile.readLine());
                 resource = Integer.parseInt(saveFile.readLine());
