@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
+import java.io.*;
 
 public class MainController implements Initializable {
 
@@ -112,7 +113,7 @@ public class MainController implements Initializable {
     int numOfPasses = 0;
     Button passButton = new Button();
     Button enterTownButton = new Button();
-    Button[] townOptionButton = new Button[4];
+    Button[] townOptionButton = new Button[6];
     int time = 0;
     int[] actTurn = new int[4];
     Random rand = new Random();
@@ -267,12 +268,15 @@ public class MainController implements Initializable {
                             });
                         }
                     }
-                    for (int i = 0; i < numOfPlayer; i++) {
+                    for (int i = 0; i < 4; i++) {
                         playerInfoDisplay[i] = new Label();
                         playerInfoDisplay[i].setText(String.format("player %d has %d money", i + 1, player[i].getMoney()));
                         playerInfoDisplay[i].setMaxWidth(10000);
                         playerInfoDisplay[i].setMaxHeight(10);
                         mapPane.add(playerInfoDisplay[i], 5, i);
+                        if (i >= numOfPlayer) {
+                            playerInfoDisplay[i].setVisible(false);
+                        }
                     }
                 }
             } else {
@@ -382,6 +386,14 @@ public class MainController implements Initializable {
             mapPane.setVisible(true);
             townPane.setVisible(false);
         }
+        if (i == 4) {
+            save();
+        }
+        if (i == 5) {
+            load();
+            mapPane.setVisible(true);
+            townPane.setVisible(false);
+        }
     }
 
     public void storeOptionEvent(int i) {
@@ -428,6 +440,93 @@ public class MainController implements Initializable {
         playerInfoDisplay[actTurn[turn]].setText(String.format("player %d has %d dollars", actTurn[turn] + 1 , player[actTurn[turn]].getMoney()));
     }
 
+    public void save() {
+        try {
+
+            FileOutputStream fileOut = new FileOutputStream("players.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(player);
+            FileOutputStream fileOut2 = new FileOutputStream("tiles.ser");
+            ObjectOutputStream out2 = new ObjectOutputStream(fileOut2);
+            out2.writeObject(tiles);
+            out.close();
+            fileOut.close();
+            out2.close();
+            fileOut.close();
+        } catch (Exception e) {
+            System.out.println("hi");
+            return;
+        }
+    }
+
+    public void load() {
+        try {
+            System.out.println("player load");
+            FileInputStream fileIn = new FileInputStream("players.ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            System.out.println("file opened");
+            player = (Player[]) in.readObject();
+            System.out.println("player loaded");
+            in.close();
+            fileIn.close();
+            System.out.println("tile load");
+            FileInputStream fileIn2 = new FileInputStream("tiles.ser");
+            ObjectInputStream in2 = new ObjectInputStream(fileIn2);
+            System.out.println("file opened");
+            tiles = (Tile[][]) in2.readObject();
+            System.out.println("successful load");
+            in2.close();
+            fileIn2.close();
+            boolean notSet =true;
+            System.out.println("setting num of Player");
+            for (int k = 0; k < 4; k++) {
+                System.out.println("weird1");
+                if (player[k].getName() == null && notSet) {
+                    System.out.println("weird");
+                    numOfPlayer = k;
+                    notSet = false;
+                }
+            }
+            if (notSet) {
+                numOfPlayer = 4;
+            }
+            for (int i = 0; i < 4; i++) {
+                if (i < numOfPlayer) {
+                    playerInfoDisplay[i].setVisible(true);
+                    playerInfoDisplay[i].setText(String.format("player %d has %d dollars resource1: %d resource2: %d resource3 %d", i + 1 , player[i].getMoney(), player[i].getResource(0), player[i].getResource(1), player[i].getResource(2)));
+                } else {
+                    playerInfoDisplay[i].setVisible(false);
+                }
+            }
+            System.out.println(numOfPlayer);
+            System.out.println("successful\n start connecting tile and player");
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    for (int k = 0; k < 4; k ++) {
+                        //System.out.println("working on " + i + ", " + j + " with player " + k);
+                        if (player[k] != null && tiles[i][j] != null) {
+                            //System.out.println("player and tiles not null");
+                            if (tiles[i][j].getOwnerName() != null && player[k].getName() != null) {
+                                //System.out.println("tile has owner name" + tiles[i][j].getOwnerName());
+                                if (player[k].getName().equals(tiles[i][j].getOwnerName())) {
+                                    //System.out.println("trying to reclaim ");
+                                    player[k].reclaimLand(tiles[i][j]);
+                                    //System.out.println("trying to load color");
+                                    player[k].loadColor();
+                                    buttons[i][j].setStyle(String.format("-fx-base: #%h", player[k].getColor()));
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+    }
+
     public void initialize(URL location, ResourceBundle resources) {
 
         assert startButton != null : "fx identification failed.";
@@ -462,7 +561,7 @@ public class MainController implements Initializable {
         townPane.setVisible(false);
         outfitPane.setVisible(false);
         storePane.setVisible(false);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             townOptionButton[i] = new Button(String.format("Town Option %d", i + 1));
             final int k = i;
             townOptionButton[i].setOnAction(new EventHandler<ActionEvent>() {
@@ -470,11 +569,14 @@ public class MainController implements Initializable {
                     townOptionEvent(k);
                 }
             });
-            townPane.add(townOptionButton[i], i%2, i/2);
+            townPane.add(townOptionButton[i], i%3, i/3);
         }
         townOptionButton[0].setText("Resource Store");
         townOptionButton[1].setText("Buy Mule");
         townOptionButton[2].setText("Gamble");
+        townOptionButton[3].setText("Return");
+        townOptionButton[4].setText("save");
+        townOptionButton[5].setText("load");
 
         for (int i = 0; i < 7; i++) {
             storeOptionButton[i] = new Button(String.format("store Option %d", i + 1));

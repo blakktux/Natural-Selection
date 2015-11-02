@@ -1,8 +1,10 @@
 package application;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable {
     private Mule mule;
-    private Player owner;
+    private transient Player owner;
+    private String ownerName;
     private int power;
 
 
@@ -20,8 +22,13 @@ public class Tile {
         return ret;
     }
 
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     public void setOwner(Player owner) {
         this.owner = owner;
+        this.ownerName = owner.getName();
     }
 
     public void increasePower(int rate) {
