@@ -1,0 +1,58 @@
+<a href="../index.html" target="_top">Inspections</a>  <a HREF="e84.html" target="_blank">Open source</a>
+<hr>&nbsp;&nbsp;<font style="font-weight:bold; color:#005555;">Name</font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;method&nbsp;<code>void&nbsp;<b>handle</b>(ActionEvent e)</code><br>
+<br>&nbsp;&nbsp;<font style="font-weight:bold; color:#005555;">Location</font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;<code><a HREF="e59.html">anonymous</a></code> in <code>void&nbsp;<a
+        HREF="e28.html">playerDone</a>(ActionEvent)</code> <code>(application.MainController)</code><br><br>&nbsp;&nbsp;
+<font style="font-weight:bold; color:#005555;">Problem synopsis</font>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Method overrides a library method but
+<ul>
+    <li>its class is never instantiated OR</li>
+    <li>its class instantiation is not reachable from entry points.</li>
+</ul><br><br><br>&nbsp;&nbsp;<font style="font-weight:bold; color:#005555;">Uses the following</font>
+<ul>
+    <li>"><code>void&nbsp;<a HREF="e60.html">changeTileColor</a>(int, int)</code>
+        <code>(application.MainController)</code><br>Not Reachable. 2 usages found in the project code.
+    </li>
+</ul>
+<table cellpadding="0" border="0" cellspacing="0">
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+</table>&nbsp;&nbsp;<font style="font-weight:bold; color:#005555;">Call chain</font>
+<ul>
+    <li><code>void&nbsp;<a HREF="e60.html">changeTileColor</a>(int, int)</code>
+        <code>(application.MainController)</code></li>
+    <ul>
+        <li><code>boolean&nbsp;<a HREF="e62.html">installMule</a>(Tile)</code> <code>(application.Player)</code></li>
+        <ul>
+            <li><code>int[]&nbsp;<a HREF="e63.html">produce</a>()</code> <code>(application.Mule)</code></li>
+            <li><code>Mule&nbsp;<a HREF="e64.html">installMule</a>(Mule)</code> <code>(application.Tile)</code></li>
+            <ul>
+                <li><code>Player&nbsp;<a HREF="e65.html">owner</a></code> <code>(application.Tile)</code></li>
+                <li><code>void&nbsp;<a HREF="e66.html">lostMule</a>()</code> <code>(application.Player)</code></li>
+                <li><code><a HREF="e67.html">mule</a></code> <code>()</code></li>
+                <li><code>Mule&nbsp;<a HREF="e61.html">mule</a></code> <code>(application.Tile)</code></li>
+            </ul>
+            <li><code><a HREF="e68.html">tile</a></code> <code>()</code></li>
+        </ul>
+        <li><code>Tile[][]&nbsp;<a HREF="e56.html">tiles</a></code> <code>(application.MainController)</code></li>
+        <li><code><a HREF="e69.html">j</a></code> <code>()</code></li>
+        <li><code>void&nbsp;<a HREF="e70.html">claimLand</a>(Tile)</code> <code>(application.Player)</code></li>
+        <ul>
+            <li><code><a HREF="e71.html">tile</a></code> <code>()</code></li>
+            <li><code>void&nbsp;<a HREF="e72.html">setOwner</a>(Player)</code> <code>(application.Tile)</code></li>
+            <ul>
+                <li><code><a HREF="e73.html">owner</a></code> <code>()</code></li>
+            </ul>
+        </ul>
+        <li><code>Player&nbsp;<a HREF="e74.html">getOwner</a>()</code> <code>(application.Tile)</code></li>
+        <ul></ul>
+        <li><code>Color&nbsp;<a HREF="e75.html">getColor</a>()</code> <code>(application.Player)</code></li>
+        <ul>
+            <li><code>Color&nbsp;<a HREF="e76.html">color</a></code> <code>(application.Player)</code></li>
+        </ul>
+        <li><code><a HREF="e77.html">i</a></code> <code>()</code></li>
+        <li><code>Button[][]&nbsp;<a HREF="e55.html">buttons</a></code> <code>(application.MainController)</code></li>
+    </ul>
+</ul>

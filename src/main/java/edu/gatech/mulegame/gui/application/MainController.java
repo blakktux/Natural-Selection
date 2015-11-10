@@ -1,17 +1,17 @@
 package application;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+
+import java.net.URL;
+import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Random;
 
 public class MainController implements Initializable {
 
@@ -21,57 +21,59 @@ public class MainController implements Initializable {
     // @FXML // URL location of the FXML file that was given to the FXMLLoader
     // private URL location;
 
+    Timer timer = new Timer();
+    int[] settings = new int[3];
+    int count = 0;
+    int numOfPlayer;
+    Player[] player = new Player[4];
+    Button[][] buttons = new Button[4][4];
+    int turn = 0;
+    int round = 0;
+    Label[] playerInfoDisplay = new Label[4];
+    int numOfPasses = 0;
+    Button passButton = new Button();
+    Button enterTownButton = new Button();
+    Button[] townOptionButton = new Button[4];
+    int time = 1000;
+    int[] actTurn = new int[4];
+    Random rand = new Random();
+    Tile[][] tiles = new Tile[4][4];
+    boolean installingMule = false;
+    Button[][] outfitButton = new Button[2][2];
     @FXML
     private Button startButton;
-
     @FXML
     private Button easyMode;
-
     @FXML
     private Button hardMode;
-
     @FXML
     private Button mediumMode;
-
     @FXML
     private Button mountainButton;
-
     @FXML
     private Button riverButton;
-
     @FXML
     private Button flatlandButton;
-
     @FXML
     private Button flapperButton;
-
     @FXML
     private Button leggiteButton;
-
     @FXML
     private Button humanoidButton;
-
     @FXML
     private Button mechtronButton;
-
     @FXML
     private Button gollumerButton;
-
     @FXML
     private Button packerButton;
-
     @FXML
     private Button bonzoidButton;
-
     @FXML
     private Button spheroidButton;
-
     @FXML
     private Slider playerCount;
-
     @FXML
     private Label currentPlayer;
-
     @FXML
     private GridPane startPane;
     @FXML
@@ -96,26 +98,6 @@ public class MainController implements Initializable {
     private Label mapPaneDialog1;
     @FXML
     private GridPane outfitPane;
-
-    Timer timer = new Timer();
-    int[] settings = new int[3];
-    int count = 0;
-    int numOfPlayer;
-    Player[] player = new Player[4];
-    Button[][] buttons = new Button[4][4];
-    int turn = 0;
-    int round = 0;
-    Label[] playerInfoDisplay = new Label[4];
-    int numOfPasses = 0;
-    Button passButton = new Button();
-    Button enterTownButton = new Button();
-    Button[] townOptionButton = new Button[4];
-    int time = 1000;
-    int[] actTurn = new int[4];
-    Random rand = new Random();
-    Tile[][] tiles = new Tile[4][4];
-    boolean installingMule = false;
-    Button[][] outfitButton = new Button[2][2];
 
     @FXML
     private void openPane2(ActionEvent e) {
@@ -342,7 +324,7 @@ public class MainController implements Initializable {
         /*for (int i = 0; i < numOfPlayer; i++) {
             System.out.print(" " + actTurn[i] + " ");
         }
-        System.out.println()*/;
+        System.out.println()*/
     }
 
     public void townOptionEvent(int i) {
